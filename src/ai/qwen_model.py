@@ -5,7 +5,6 @@ import json
 import os
 from openai import OpenAI
 
-
 DEFAULT_PROMPT_TEMPLATE = """
 请分析以下求职者的需求和职位描述的匹配程度：
 
@@ -40,7 +39,7 @@ class QwenModel(AIModel):
             api_key=self.api_key,
             base_url=base_url,
         )
-        
+
     def judge(self, user_requirements: str, job_description: str) -> Dict[str, Any]:
         prompt = self.prompt_template.format(
             user_requirements=user_requirements, job_description=job_description)
@@ -62,12 +61,16 @@ class QwenModel(AIModel):
             response = "".join(chunks_content)
             ret_json = self._extract_code_blocks(response)
             ret_json = json.loads(ret_json[0])
+            ret_json["success"] = True
             return ret_json
 
         except Exception as e:
-            raise Exception(f"ChatGPT API调用失败: {str(e)}")
-        
-        
+            # TODO: 考虑改成日志
+            print(f"Qwen API调用失败: {str(e)}")
+            ret_json = {"success": False, "error": str(e)}
+            return ret_json
+
+
 
 
 # 流式输出的JSON格式：
@@ -85,4 +88,3 @@ class QwenModel(AIModel):
 #     "system_fingerprint":null,
 #     "usage":nul
 # }
-
