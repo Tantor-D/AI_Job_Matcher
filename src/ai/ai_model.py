@@ -23,7 +23,7 @@ class AIModel(ABC):
         pass
 
 
-    def extract_code_blocks(self, text: str) -> list:
+    def _extract_code_blocks(self, text: str) -> list:
         """
         提取由 ``` 包裹的内容的代码块。
 

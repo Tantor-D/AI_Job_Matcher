@@ -30,10 +30,10 @@ class QwenModel(AIModel):
     def __init__(self,
                  api_key: str,
                  base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1",
-                 model: str = "qwen-plus",
+                 model_name: str = "qwen-plus",
                  prompt_template: str = None):
         self.api_key = api_key
-        self.model = model
+        self.model_name = model_name
         self.prompt_template = prompt_template if prompt_template else DEFAULT_PROMPT_TEMPLATE
 
         self.client = OpenAI(
@@ -49,7 +49,7 @@ class QwenModel(AIModel):
 
         try:
             completion = self.client.chat.completions.create(
-                model=self.model,
+                model=self.model_name,
                 messages=messages,
                 stream=True,
                 stream_options={"include_usage": True}
@@ -57,11 +57,10 @@ class QwenModel(AIModel):
 
             chunks_content = []
             for chunk in completion:
-                print(chunk.model_dump_json())
                 chunks_content.append(chunk.choices[0].delta.content if len(chunk.choices) > 0 else "")
 
             response = "".join(chunks_content)
-            ret_json = self.extract_code_blocks(response)
+            ret_json = self._extract_code_blocks(response)
             ret_json = json.loads(ret_json[0])
             return ret_json
 

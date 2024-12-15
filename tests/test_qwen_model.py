@@ -19,7 +19,7 @@ def test_qwen_model_judge():
     
     # 实例化 QWENModel
     model = QwenModel(
-        model=qwen_config["model"],
+        model_name=qwen_config["model_name"],
         api_key=qwen_config["api_key"],
         base_url=qwen_config["base_url"]
     )
