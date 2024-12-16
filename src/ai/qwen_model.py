@@ -28,8 +28,8 @@ class QwenModel(AIModel):
 
     def __init__(self,
                  api_key: str,
-                 base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1",
                  model_name: str = "qwen-plus",
+                 base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1",
                  prompt_template: str = None):
         self.api_key = api_key
         self.model_name = model_name

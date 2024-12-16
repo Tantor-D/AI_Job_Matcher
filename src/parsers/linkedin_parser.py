@@ -36,7 +36,7 @@ class LinkedInParser(WebParser):
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
         }
 
-    def parse(self, url: str) -> List[Dict[str, Any]]:
+    def parse(self, url: str, max_num: int = -1) -> List[Dict[str, Any]]:
         """
         解析LinkedIn职位搜索结果页面
         
@@ -60,6 +60,8 @@ class LinkedInParser(WebParser):
                     job_info = self._get_info_from_card(card)
                     jobs_info.append(job_info)
 
+                    if 0 < max_num <= len(jobs_info):
+                        break
                     # 添加随机延迟，避免被封IP
                     time.sleep(random.uniform(1, 3))
 
@@ -72,6 +74,18 @@ class LinkedInParser(WebParser):
         except Exception as e:
             raise Exception(f"解析LinkedIn页面失败: {str(e)}")
 
+    def format_all_job_descriptions(self, jobs: List[Dict[str, Any]]) -> List[str]:
+        """
+        格式化多个职位信息为字符串
+
+        Args:
+            jobs: 包含多个职位信息的列表
+
+        Returns:
+            包含多个格式化职位描述字符串的列表
+        """
+        return [self.format_job_description_str(job) for job in jobs]
+
     def format_job_description_str(self, job_info: Dict[str, Any]) -> str:
         """
         根据职位信息生成格式化描述字符串
@@ -82,30 +96,6 @@ class LinkedInParser(WebParser):
         Returns:
             格式化的职位描述字符串
         """
-        # 定义模板字符串
-        template = """
-        **Job Title**: {title}
-        **Company**: {company}  
-        **Company Link**: [Visit Company]({company_link})  
-        **Job Location**: {location}  
-        **Posted On**: {post_time}  
-        **Job Benefits**: {benefits}  
-
-        ---
-
-        ### **Job Description**:
-        {full_description}
-
-        ---
-
-        ### **Additional Information**:
-        - **Job Link**: [View Job Posting]({job_link})
-        - **Company Logo**: ![Company Logo]({company_logo})
-        - **Job ID**: {job_id}
-        - **Reference ID**: {reference_id}
-        - **Tracking ID**: {tracking_id}
-        """
-
         # 定义默认值
         default_values = {
             'title': 'Not specified',
@@ -131,7 +121,6 @@ class LinkedInParser(WebParser):
         except Exception as e:
             print(f"Error formatting job description: {str(e)}")
             return "An error occurred while formatting the job description."
-
 
     def _get_info_from_card(self, card) -> Dict[str, Any]:
         """从职位卡片中提取所有可以提取的信息，首先从搜索结果页面card中提取的信息，然后进入职位详情页面获取详细描述"""
