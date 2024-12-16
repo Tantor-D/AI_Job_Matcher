@@ -8,7 +8,7 @@ from .ai.ai_model import AIModel
 from .ai.bert_model import BERTModel
 from .ai.chatgpt_model import ChatGPTModel
 from .ai.ai_judger import AIJudger
-from .main.job_match import JobMatch
+from .main.job_match_server import JobMatchServer
 
 __version__ = "0.1.0"
 
@@ -19,5 +19,5 @@ __all__ = [
     "BERTModel",
     "ChatGPTModel",
     "AIJudger",
-    "JobMatch",
+    "JobMatchServer",
 ] 

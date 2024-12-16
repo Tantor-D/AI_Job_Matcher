@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 
 class WebParser(ABC):
     """网页解析的抽象基类"""
-    
+
     @abstractmethod
-    def parse(self, url: str) -> Dict[str, Any]:
+    def parse(self, url: str) -> List[Dict[str, Any]]:
         """
         解析给定URL的招聘信息
         
@@ -22,4 +22,17 @@ class WebParser(ABC):
             - description: 职位描述
             - requirements: 职位要求
         """
-        pass 
+        pass
+
+    @abstractmethod
+    def format_job_description_str(self, job_info: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        将职位信息转换为文本
+
+        Args:
+            job_info: 包含招聘信息的字典
+
+        Returns:
+            包含职位信息的文本
+        """
+        pass

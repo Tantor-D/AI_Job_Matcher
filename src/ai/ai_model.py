@@ -19,6 +19,8 @@ class AIModel(ABC):
             - decision: 是否推荐（布尔值）
             - score: 匹配度分数（0-1之间的浮点数）
             - reason: 推荐原因或不推荐原因
+            - success: 是否成功执行（布尔值）
+            - error: 错误信息（字符串），仅仅在执行失败时包含
         """
         pass
 
